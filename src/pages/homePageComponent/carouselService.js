@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { Carousel } from 'react-responsive-carousel';
 import axios from 'axios';
 import CardService from './cardService';
+import Carousel from '../../carousel';
+
 
 const CarouselService = () => {
   const [cards, setCards] = useState([]);
@@ -16,13 +17,16 @@ const CarouselService = () => {
   }, []);
 
   return (
-    <Carousel autoPlay interval={2000} showThumbs={false} infiniteLoop useKeyboardArrows>
-      {cards.map(card => (
-        <div key={card.id}>
-          <CardService card={card} />
-        </div>
-      ))}
-    </Carousel>
+    <>
+      <h2>Nos Services</h2>
+      <Carousel>
+        {cards.map((card) => (
+          <div key={card.id}>
+            <CardService card={card} />
+          </div>
+        ))}
+      </Carousel>
+    </>
   );
 };
 

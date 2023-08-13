@@ -4,9 +4,14 @@ body {
   -moz-osx-font-smoothing: grayscale;
   background-color: #2B2D42;
   color: #2B2D42;
+  font-family: 'Hind Madurai', serif;
 }
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+}
+
+h1, h2, h3 {
+  font-family: 'Montserrat', sans-serif;
 }
