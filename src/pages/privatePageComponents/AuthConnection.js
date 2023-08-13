@@ -7,7 +7,7 @@ import styled from 'styled-components';
 const MemberArea = styled.div`
   display: flex;
   flex-direction: row;
-  justify-content: space-around;
+  justify-content: space-between;
   align-items: center;
   margin-top: 50px;
   margin-bottom: 50px;

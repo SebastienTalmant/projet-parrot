@@ -77,9 +77,7 @@ const AdminDashboard = () => {
   };
 
   return (<>
-  <div>
     <Connection />
-  </div>
     <DashboardContainer>
       <UserFormAndTableContainer>
         <Table data={users} handleEdit={handleEdit} handleDelete={handleDelete} handleAdd={handleAdd} />

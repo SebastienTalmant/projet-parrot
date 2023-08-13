@@ -7,7 +7,6 @@ const StyledTable = styled.table`
   font-family: "Lora", serif;
   width: 100%;
   border-collapse: collapse;
-
   tr:nth-child(even) {
     background-color: #d2d7df;
   }

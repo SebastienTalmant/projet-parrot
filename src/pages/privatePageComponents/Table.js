@@ -27,11 +27,9 @@ const GlobalStyles = createGlobalStyle`
     justify-content: center;
     font-family: "Lora", serif;
     color: #2B2D42;
-
     li {
       margin: 0 5px;
     }
-
     a {
       color: #2B2D42;
       cursor: pointer;
@@ -43,7 +41,6 @@ const GlobalStyles = createGlobalStyle`
 const Table = ({ data, handleEdit, handleDelete, handleAdd }) => {
   const [currentPage, setCurrentPage] = React.useState(1);
   const itemsPerPage = 5;
-
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentItems = data.slice(indexOfFirstItem, indexOfLastItem);
@@ -64,6 +61,7 @@ const Table = ({ data, handleEdit, handleDelete, handleAdd }) => {
               <td>
                 <Button primary onClick={() => handleEdit(item.id)}>Modifier</Button>
                 {item.role !== 'admin' && <Button onClick={() => handleDelete(item.id)}>Supprimer</Button>}
+                {item.role === 'admin' && <Button onClick={() => alert('Suppression administrateur')}>Supprimer</Button>}
               </td>
             </tr>
           ))}
