@@ -61,7 +61,7 @@ const Table = ({ data, handleEdit, handleDelete, handleAdd }) => {
               <td>
                 <Button primary onClick={() => handleEdit(item.id)}>Modifier</Button>
                 {item.role !== 'admin' && <Button onClick={() => handleDelete(item.id)}>Supprimer</Button>}
-                {item.role === 'admin' && <Button onClick={() => alert('Suppression administrateur')}>Supprimer</Button>}
+                {item.role === 'admin' && <Button onClick={() => alert('Suppression administrateur impossible')}>Supprimer</Button>}
               </td>
             </tr>
           ))}
