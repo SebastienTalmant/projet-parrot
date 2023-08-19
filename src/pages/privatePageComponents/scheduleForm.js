@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import Button from '../../button';
 
+
 const FormRow = styled.div`
   display: flex;
   justify-content: center;
@@ -25,17 +26,31 @@ const ScheduleForm = ({ onSubmit }) => {
   const [morningClose, setMorningClose] = useState('');
   const [afternoonOpen, setAfternoonOpen] = useState('');
   const [afternoonClose, setAfternoonClose] = useState('');
+  const [errorMessage, setErrorMessage] = useState(null);
+  const isValidTimeFormat = (time) => {
+    if (time === "") return true;
+    return /^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/.test(time);
+  };
+  
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!isValidTimeFormat(morningOpen) || !isValidTimeFormat(morningClose) ||
+        !isValidTimeFormat(afternoonOpen) || !isValidTimeFormat(afternoonClose)) {
+      setErrorMessage("Veuillez entrer tous les horaires au format HH:mm ou laisser vide");
+      return;
+    }
+  
     try {
       await onSubmit(day, { morningOpen, morningClose, afternoonOpen, afternoonClose });
-      alert('Enregistrement effectué')
+      alert('Enregistrement effectué');
       setDay('');
       setMorningOpen('');
       setMorningClose('');
       setAfternoonOpen('');
       setAfternoonClose('');
+      setErrorMessage(null);
     } catch (e) {
       console.error(e);
     }
@@ -43,6 +58,7 @@ const ScheduleForm = ({ onSubmit }) => {
 
   return (
     <form onSubmit={handleSubmit}>
+      {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
       <FormRow>
         <FormLabel>Jour : </FormLabel>
         <select onChange={(e) => setDay(e.target.value)} required value={day}>

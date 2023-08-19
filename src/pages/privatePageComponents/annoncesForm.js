@@ -90,37 +90,59 @@ const AnnoncesForm = () => {
     const [allOptions, setAllOptions] = useState([]);
     const [currentOption, setCurrentOption] = useState('');
     const [selectedOptions, setSelectedOptions] = useState([]);
+    const [isLoading, setIsLoading] = useState(false);
+
 
     useEffect(() => {
+        console.log("Fetching options from the backend");
         axios.get('http://localhost:3000/options_equipements')
-            .then(res => setAllOptions(res.data))
-            .catch(err => console.error(err));
+            .then(res => {
+                console.log("Received options:", res.data);
+                const optionsMap = {};
+                for (let opt of res.data) {
+                    optionsMap[opt.nom] = opt.id;
+                }
+                setAllOptions(optionsMap);
+            })
+            .catch(err => {
+                console.error("Error fetching options:", err);
+            });
     }, []);
+
 
     const handleOptionChange = (e) => {
         setCurrentOption(e.target.value);
     };
 
     const handleAddOption = () => {
-        if (currentOption && !allOptions.includes(currentOption)) {
+        const optionId = allOptions[currentOption];
+        if (optionId) {
+            if (!selectedOptions.some(opt => opt.id === optionId)) {
+                setSelectedOptions([...selectedOptions, { nom: currentOption, id: optionId }]);
+                setCurrentOption('');
+            }
+        } else {
             axios.post('http://localhost:3000/options_equipements', { option: currentOption })
                 .then(res => {
-                    setAllOptions([...allOptions, currentOption]);
-                    setSelectedOptions([...selectedOptions, currentOption]);
+                    const newOption = { nom: currentOption, id: res.data.id };
+                    setAllOptions({ ...allOptions, [currentOption]: res.data.id });
+                    setSelectedOptions([...selectedOptions, newOption]);
                     setCurrentOption('');
                 })
                 .catch(err => console.error(err));
-        } else if (currentOption && !selectedOptions.includes(currentOption)) {
-            setSelectedOptions([...selectedOptions, currentOption]);
-            setCurrentOption('');
         }
     };
+    
 
-    const handleRemoveOption = (optionToRemove) => {
-        setSelectedOptions(prevOptions => prevOptions.filter(option => option !== optionToRemove));
+    const handleRemoveOption = (optionNameToRemove) => {
+        setSelectedOptions(prevOptions => prevOptions.filter(option => option.nom !== optionNameToRemove));
     };
 
-    const filteredOptions = allOptions.filter(option => option.toLowerCase().includes(currentOption.toLowerCase()));
+
+    const optionNames = Object.keys(allOptions);
+    const filteredOptions = optionNames.filter(option => option.toLowerCase().includes(currentOption.toLowerCase()));
+    
+
 
     const s3 = new S3({
         accessKeyId: process.env.REACT_APP_AWS_ACCESS_KEY,
@@ -141,6 +163,10 @@ const AnnoncesForm = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setIsLoading(true);
+        console.log("Submitting form with data:", {
+            titre, description, images, prix, annee, nbplaces, puissance, energie, couleur, premiermain, kilometrage, boite, interieur, options: selectedOptions
+        });
 
         let annonceID
         const imageUrls = [];
@@ -179,7 +205,6 @@ const AnnoncesForm = () => {
             const annonceResponse = await axios.post('http://localhost:3000/annonces', formData);
             annonceID = annonceResponse.data.annonce_id;
             let annonce_id = annonceID
-            console.log(annonceResponse.data);
             if (!annonceID) {
                 throw new Error("annonce_id not returned from server");
             }
@@ -191,12 +216,22 @@ const AnnoncesForm = () => {
                 });
             }
 
-            for (const option_id of selectedOptions) {
-                await axios.post('http://localhost:3000/annonces_options', {
-                    annonce_id,
-                    option_id
-                });
+            
+            for (const option of selectedOptions) {
+                const optionId = allOptions[option.nom];
+                if (optionId) {                    
+                    await axios.post('http://localhost:3000/annonces_options', {
+                        annonce_id,
+                        option_name: option.nom
+                    });
+                } else {
+                    console.error("Couldn't find ID for option:", option);
+                }
             }
+            
+
+
+            alert('L\'enregistrement a été effectué avec succès!');
 
         } catch (error) {
             console.error('Error during the process:', error);
@@ -219,6 +254,9 @@ const AnnoncesForm = () => {
                 alert('Une erreur s\'est produite pendant le processus. Veuillez réessayer.');
             }
         }
+        finally {
+            setIsLoading(false);
+        }
     };
 
 
@@ -230,6 +268,7 @@ const AnnoncesForm = () => {
                 value={titre}
                 onChange={(e) => setTitre(e.target.value)}
                 placeholder="Titre de l'annonce"
+                required
             />
 
             <StyledLabel>Description :</StyledLabel>
@@ -237,6 +276,7 @@ const AnnoncesForm = () => {
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
                 placeholder="Description de l'annonce"
+                required
             />
 
             <StyledLabel>Prix :</StyledLabel>
@@ -245,6 +285,7 @@ const AnnoncesForm = () => {
                 value={prix}
                 onChange={(e) => setPrix(e.target.value)}
                 placeholder="Prix"
+                required
             />
 
             <StyledLabel>Année :</StyledLabel>
@@ -253,6 +294,7 @@ const AnnoncesForm = () => {
                 value={annee}
                 onChange={(e) => setAnnee(e.target.value)}
                 placeholder="Année"
+                required
             />
 
             <StyledLabel>Nombre de places :</StyledLabel>
@@ -261,6 +303,7 @@ const AnnoncesForm = () => {
                 value={nbplaces}
                 onChange={(e) => setNbplaces(e.target.value)}
                 placeholder="Nombre de places"
+                required
             />
 
             <StyledLabel>Puissance :</StyledLabel>
@@ -269,6 +312,7 @@ const AnnoncesForm = () => {
                 value={puissance}
                 onChange={(e) => setPuissance(e.target.value)}
                 placeholder="Puissance"
+                required
             />
 
             <StyledLabel>Énergie :</StyledLabel>
@@ -277,6 +321,7 @@ const AnnoncesForm = () => {
                 value={energie}
                 onChange={(e) => setEnergie(e.target.value)}
                 placeholder="Énergie"
+                required
             />
 
             <StyledLabel>Couleur :</StyledLabel>
@@ -285,6 +330,7 @@ const AnnoncesForm = () => {
                 value={couleur}
                 onChange={(e) => setCouleur(e.target.value)}
                 placeholder="Couleur"
+                required
             />
 
             <StyledLabel>Première main :</StyledLabel>
@@ -302,6 +348,7 @@ const AnnoncesForm = () => {
                 value={kilometrage}
                 onChange={(e) => setKilometrage(e.target.value)}
                 placeholder="Kilométrage"
+                required
             />
 
             <StyledLabel>Boîte de vitesse :</StyledLabel>
@@ -318,6 +365,7 @@ const AnnoncesForm = () => {
                 value={interieur}
                 onChange={(e) => setInterieur(e.target.value)}
                 placeholder="Tissu, cuir..."
+                required
             />
 
             <StyledLabel>Photos :</StyledLabel>
@@ -344,18 +392,21 @@ const AnnoncesForm = () => {
                     <StyledOption key={option} value={option} />
                 ))}
             </datalist>
+
+
             <Button primary onClick={handleAddOption}>Ajouter/Sélectionner l'option</Button>
 
             <ul>
                 {selectedOptions.map(option => (
-                    <li key={option}>
-                        {option}
-                        <Button onClick={() => handleRemoveOption(option)}>X</Button>
+                    <li key={option.nom}>
+                        {option.nom}
+                        <Button onClick={() => handleRemoveOption(option.nom)}>X</Button>
                     </li>
                 ))}
             </ul>
 
-            <Button primary onClick={handleSubmit}>Publier l'annonce</Button>
+            <Button primary onClick={handleSubmit} disabled={isLoading}>{isLoading ? "Chargement..." : "Publier l'annonce"}
+</Button>
         </FormContainer>
     );
 };

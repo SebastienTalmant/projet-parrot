@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
+import { FaArrowLeft, FaArrowRight } from 'react-icons/fa';
 
 const CarouselContainer = styled.div`
   position: relative;
   overflow: hidden;
   width: 100%;
-  height: 600px;
+  height: 550px;
 `;
 
 const SlideWrapper = styled.div`
@@ -35,9 +36,8 @@ const CarouselButton = styled.button`
   padding: 10px;
   border-radius: 50%;
   z-index: 10;
-
-  &:focus {
-    outline: none;
+  &:hover {
+    background: rgba(255, 255, 255, 0.8);
   }
 `;
 
@@ -58,22 +58,24 @@ const Carousel = ({ children }) => {
 
   const nextSlide = () => {
     if (window.innerWidth >= 768 && currentSlide < totalSlides - slidesToScroll * 3) {
-        setCurrentSlide(currentSlide + slidesToScroll);
-      } else if (window.innerWidth < 768 && currentSlide < totalSlides - slidesToScroll) {
-        setCurrentSlide(currentSlide + slidesToScroll); }
-      else {
-        setCurrentSlide(0);
-      }
+      setCurrentSlide(currentSlide + slidesToScroll);
+    } else if (window.innerWidth < 768 && currentSlide < totalSlides - slidesToScroll) {
+      setCurrentSlide(currentSlide + slidesToScroll);
+    }
+    else {
+      setCurrentSlide(0);
+    }
   };
 
   const prevSlide = () => {
     if (currentSlide > 0) {
       setCurrentSlide(currentSlide - slidesToScroll);
-    } else { if (window.innerWidth >=768) {
-      setCurrentSlide(totalSlides - slidesToScroll * 3);      
     } else {
-      setCurrentSlide(totalSlides - slidesToScroll);
-    }
+      if (window.innerWidth >= 768) {
+        setCurrentSlide(totalSlides - slidesToScroll * 3);
+      } else {
+        setCurrentSlide(totalSlides - slidesToScroll);
+      }
 
     }
   };
@@ -83,15 +85,34 @@ const Carousel = ({ children }) => {
     return () => clearInterval(interval);
   }, [currentSlide]);
 
+
+  const [startX, setStartX] = useState(0);
+
+  const handleTouchStart = (e) => {
+    setStartX(e.touches[0].clientX);
+  };
+
+  const handleTouchMove = (e) => {
+    const touchX = e.touches[0].clientX;
+    const difference = startX - touchX;
+    if (Math.abs(difference) > 50) {
+      if (difference > 0) {
+        nextSlide();
+      } else {
+        prevSlide();
+      }
+    }
+  };
+
   return (
-    <CarouselContainer>
+    <CarouselContainer onTouchStart={handleTouchStart} onTouchMove={handleTouchMove}>
       <SlideWrapper currentSlide={currentSlide} slideWidth={slideWidth}>
         {React.Children.map(children, child => (
           <Slide>{child}</Slide>
         ))}
       </SlideWrapper>
-      <PrevButton onClick={prevSlide}>&lt;</PrevButton>
-      <NextButton onClick={nextSlide}>&gt;</NextButton>
+      <PrevButton onClick={prevSlide}><FaArrowLeft /></PrevButton>
+      <NextButton onClick={nextSlide}><FaArrowRight /></NextButton>
     </CarouselContainer>
   );
 };

@@ -23,7 +23,7 @@ const CardContainer = styled.div`
   padding: 20px;
   border-radius: 4px;
   box-shadow: 5px 5px 20px grey;
-  height: 530px;
+  height: 450px;
   @media (max-width: 767px) {
     width: 95vw;
   }
