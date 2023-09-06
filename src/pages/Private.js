@@ -3,7 +3,8 @@ import Connection from './privatePageComponents/AuthConnection';
 import styled from 'styled-components';
 import { AuthContext } from './privatePageComponents/AuthContext';
 import AdminDashboard from './privatePageComponents/adminDashboard';
-import AnnoncesForm from './privatePageComponents/annoncesForm';
+import UserDashboard from './privatePageComponents/userDashoboard';
+
 
 const StyledDiv = styled.div`
   background-color: #EDF2F4;
@@ -35,14 +36,12 @@ const Private = () => {
       {!isLoggedIn ? (
         <Connection />
       ) : role === 'admin' ? (
-        <>        
-          <AdminDashboard />
-          <AnnoncesForm />
-        </>
-
-        
+          <>
+            <AdminDashboard />
+            <UserDashboard />
+          </>  
       ) : (
-        <div> retest </div>
+          <UserDashboard />
       )}
     </StyledDiv>
   );

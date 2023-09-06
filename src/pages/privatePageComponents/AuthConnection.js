@@ -15,11 +15,9 @@ const MemberArea = styled.div`
 `;
 
 function Connection() {
-  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState(null);
-
-  const { isLoggedIn, setIsLoggedIn, setRole } = useContext(AuthContext);
+  const { isLoggedIn, setIsLoggedIn, role, setRole, email, setEmail } = useContext(AuthContext);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -27,9 +25,10 @@ function Connection() {
     try {
       const response = await axios.post('http://localhost:3000/login', { email, password });
       if (response && response.data) {
-        console.log(response.data);
         setIsLoggedIn(true);
         setRole(response.data.role);
+        setEmail(email);
+        console.log(email)
       }
     } catch (error) {
       if (error.response && error.response.data) {

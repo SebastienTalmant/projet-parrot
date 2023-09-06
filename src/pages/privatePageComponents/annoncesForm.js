@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
+import { AuthContext } from './AuthContext';
 import { S3 } from 'aws-sdk';
 import styled from 'styled-components';
 import Button from '../../button';
@@ -73,7 +74,7 @@ const StyledLabel = styled.label`
 
 const StyledOption = styled.option`
 `;
-const AnnoncesForm = () => {
+const AnnoncesForm = ({ onClose}) => {
     const [titre, setTitre] = useState('');
     const [description, setDescription] = useState('');
     const [images, setImages] = useState([]);
@@ -83,22 +84,21 @@ const AnnoncesForm = () => {
     const [puissance, setPuissance] = useState('');
     const [energie, setEnergie] = useState('');
     const [couleur, setCouleur] = useState('');
-    const [premiermain, setPremiermain] = useState('');
+    const [premiermain, setPremiermain] = useState('Oui');
     const [kilometrage, setKilometrage] = useState('');
-    const [boite, setBoite] = useState('');
+    const [boite, setBoite] = useState('Automatique');
     const [interieur, setInterieur] = useState('')
     const [allOptions, setAllOptions] = useState([]);
     const [currentOption, setCurrentOption] = useState('');
     const [selectedOptions, setSelectedOptions] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
-
+    const { email } = useContext(AuthContext);
 
     useEffect(() => {
-        console.log("Fetching options from the backend");
         axios.get('http://localhost:3000/options_equipements')
             .then(res => {
-                console.log("Received options:", res.data);
                 const optionsMap = {};
+                console.log ('optionsMap :', optionsMap)
                 for (let opt of res.data) {
                     optionsMap[opt.nom] = opt.id;
                 }
@@ -164,9 +164,6 @@ const AnnoncesForm = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         setIsLoading(true);
-        console.log("Submitting form with data:", {
-            titre, description, images, prix, annee, nbplaces, puissance, energie, couleur, premiermain, kilometrage, boite, interieur, options: selectedOptions
-        });
 
         let annonceID
         const imageUrls = [];
@@ -200,6 +197,7 @@ const AnnoncesForm = () => {
                 kilometrage,
                 boite,
                 interieur,
+                user_email: email
             };
 
             const annonceResponse = await axios.post('http://localhost:3000/annonces', formData);
@@ -356,8 +354,8 @@ const AnnoncesForm = () => {
                 value={boite}
                 onChange={(e) => setBoite(e.target.value)}
             >
-                <option value="Oui">Automatique</option>
-                <option value="Non">Manuelle</option>
+                <option value="Automatique">Automatique</option>
+                <option value="Manuelle">Manuelle</option>
             </StyledSelect>
 
             <StyledLabel>Type intérieur :</StyledLabel>
@@ -407,6 +405,7 @@ const AnnoncesForm = () => {
 
             <Button primary onClick={handleSubmit} disabled={isLoading}>{isLoading ? "Chargement..." : "Publier l'annonce"}
 </Button>
+            <Button onClick={onClose}>Annuler</Button>
         </FormContainer>
     );
 };

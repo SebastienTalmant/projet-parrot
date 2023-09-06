@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import CardServiceForm from './cardServiceForm';
-import CardServiceTable from './cardServiceTable';
+import AnnoncesForm from './annoncesForm';
+import AnnoncesTable from './annoncesTable';
 import axios from 'axios';
 import styled from 'styled-components';
 
@@ -33,19 +33,20 @@ const FormContainer = styled.div`
   }
 `;
 
-const CardServiceDashboard = () => {
+const AnnoncesDashboard = () => {
   const [currentId, setCurrentId] = useState(0);
-  const [cards, setCards] = useState([]);
+  const [annonces, setAnnonces] = useState([]);
   const [showForm, setShowForm] = useState(false);
 
   useEffect(() => {
-    fetchCards();
+    fetchAnnonces();
   }, []);
 
-  const fetchCards = async () => {
-    const response = await axios.get('http://localhost:3000/cardservice');
+  const fetchAnnonces = async () => {
+    const response = await axios.get('http://localhost:3000/annonces');
+    console.log("Data from API:", response.data);
     const data = Array.isArray(response.data) ? response.data : [response.data];
-    setCards(data);
+    setAnnonces(data);
   };
 
   const handleAdd = () => {
@@ -53,28 +54,20 @@ const CardServiceDashboard = () => {
     setShowForm(true);
   };
 
-  const handleEdit = (id) => {
-    setCurrentId(id);
-    setShowForm(true);
-  };
 
   const handleDelete = async (id) => {
-    if (window.confirm("Voulez-vous supprimer ce service ?")) {
-      const response = await axios.delete(`http://localhost:3000/cardservice/${id}`);
+    if (window.confirm("Voulez-vous supprimer cette annonce ?")) {
+      const response = await axios.delete(`http://localhost:3000/annonces/${id}`);
       if (response.status === 200) {
-        fetchCards();
+        fetchAnnonces();
         alert('Enregistrement effectué')
       }
     }
   };
 
   const handleFormSubmit = async (formData) => {
-    if (currentId === 0) {
-      await axios.post('http://localhost:3000/cardservice', formData);
-    } else {
-      await axios.put(`http://localhost:3000/cardservice/${currentId}`, formData);
-    }
-    fetchCards();
+    await axios.post('http://localhost:3000/annonces', formData);
+    fetchAnnonces();
     setCurrentId(0);
     setShowForm(false);
   };
@@ -82,13 +75,13 @@ const CardServiceDashboard = () => {
   return (
     <DashboardContainer>
       <TableContainer>
-        <CardServiceTable data={cards} onEdit={handleEdit} onDelete={handleDelete} onAdd={handleAdd} />
+        <AnnoncesTable data={annonces} onDelete={handleDelete} onAdd={handleAdd} />
       </TableContainer>
       <FormContainer showForm={showForm}>
         {showForm && (
-          <CardServiceForm
+          <AnnoncesForm
             onSubmit={handleFormSubmit}
-            initialValues={currentId === 0 ? {} : cards.find(card => card.id === currentId)}
+            initialValues={currentId === 0 ? {} : annonces.find(annonces => annonces.id === currentId)}
             onClose={() => {
               setCurrentId(0);
               setShowForm(false);
@@ -100,5 +93,5 @@ const CardServiceDashboard = () => {
   );
 };
 
-export default CardServiceDashboard;
+export default AnnoncesDashboard;
 

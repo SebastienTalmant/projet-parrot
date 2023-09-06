@@ -37,8 +37,9 @@ const AdminDashboard = () => {
   }, []);
 
   const fetchUsers = async () => {
-    const response = await axios.get('http://localhost:3000/admin');
-    setUsers(response.data);
+    const response = await axios.get('http://localhost:3000/user');
+    const data = Array.isArray(response.data) ? response.data : [response.data];
+    setUsers(data);
   };
 
   const handleAdd = () => {
@@ -53,7 +54,7 @@ const AdminDashboard = () => {
 
   const handleDelete = async (id) => {
     if (window.confirm("Voulez-vous supprimer ce profil ?")) {
-      const response = await axios.delete(`http://localhost:3000/admins/${id}`);
+      const response = await axios.delete(`http://localhost:3000/users/${id}`);
       if (response.status === 200) {
         fetchUsers();
         alert('Enregistrement effectué')
@@ -63,12 +64,7 @@ const AdminDashboard = () => {
 
   const handleFormSubmit = async (formData) => {
     let response;
-
-    if (formAction === 'add') {
-      response = await axios.post('http://localhost:3000/admins', formData);
-    } else if (formAction === 'edit') {
-      response = await axios.put(`http://localhost:3000/admins/${currentId}`, formData);
-    }
+      response = await axios.post('http://localhost:3000/users', formData);
     if (response && response.status === 200) {
       setFormAction(null);
       fetchUsers();
