@@ -31,6 +31,15 @@ const StyledInput = styled.input`
   width: 90%;
 `;
 
+const FormGrid = styled.div`
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 20px;
+  @media (min-width: 768px) {
+    grid-template-columns: 1fr 1fr;
+  }
+`;
+
 const StyledTextarea = styled.textarea`
   padding: 10px;
   margin: 10px 0;
@@ -260,6 +269,7 @@ const AnnoncesForm = ({ onClose}) => {
 
     return (
         <FormContainer>
+            <FormGrid>
             <StyledLabel>Titre :</StyledLabel>
             <StyledInput
                 type="text"
@@ -365,6 +375,7 @@ const AnnoncesForm = ({ onClose}) => {
                 placeholder="Tissu, cuir..."
                 required
             />
+            </FormGrid>
 
             <StyledLabel>Photos :</StyledLabel>
             <StyledInput type="file" multiple accept="image/png, image/jpeg, image/jpg, image/gif" onChange={handleImageUpload} />

@@ -4,6 +4,30 @@ import AnnoncesTable from './annoncesTable';
 import axios from 'axios';
 import styled from 'styled-components';
 
+
+const ModalOverlay = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+`;
+
+const ModalContainer = styled.div`
+  background-color: #fff;
+  max-width: 1024px;
+  padding: 20px;
+  border-radius: 8px;  
+  max-height: 80vh;
+  overflow-y: auto;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+`;
+
 const DashboardContainer = styled.div`
   display: flex;
   flex-direction: column;
@@ -40,10 +64,10 @@ const AnnoncesDashboard = () => {
 
   useEffect(() => {
     fetchAnnonces();
-  }, []);
+  }, [showForm]);
 
   const fetchAnnonces = async () => {
-    const response = await axios.get('http://localhost:3000/annonces');
+    const response = await axios.get('http://localhost:3000/annoncestable');
     console.log("Data from API:", response.data);
     const data = Array.isArray(response.data) ? response.data : [response.data];
     setAnnonces(data);
@@ -77,21 +101,22 @@ const AnnoncesDashboard = () => {
       <TableContainer>
         <AnnoncesTable data={annonces} onDelete={handleDelete} onAdd={handleAdd} />
       </TableContainer>
-      <FormContainer showForm={showForm}>
-        {showForm && (
-          <AnnoncesForm
-            onSubmit={handleFormSubmit}
-            initialValues={currentId === 0 ? {} : annonces.find(annonces => annonces.id === currentId)}
-            onClose={() => {
-              setCurrentId(0);
-              setShowForm(false);
-            }}
-          />
-        )}
-      </FormContainer>
+      {showForm && (
+        <ModalOverlay>
+          <ModalContainer>
+            <AnnoncesForm
+              onSubmit={handleFormSubmit}
+              initialValues={currentId === 0 ? {} : annonces.find(annonce => annonce.id === currentId)}
+              onClose={() => {
+                setCurrentId(0);
+                setShowForm(false);
+              }}
+            />
+          </ModalContainer>
+        </ModalOverlay>
+      )}
     </DashboardContainer>
   );
 };
 
 export default AnnoncesDashboard;
-
