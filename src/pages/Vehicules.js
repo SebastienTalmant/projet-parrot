@@ -1,5 +1,6 @@
 import React from 'react';
 import AnnoncesList from './vehiculesPageComponents/annoncesList';
+import ScheduleTable from '../scheduleTable';
 import styled from 'styled-components';
 
 
@@ -29,8 +30,10 @@ function Vehicules() {
     <StyledDiv>
       <h2>Nos Véhicules</h2>
       <AnnoncesList />
+      <h2>Nos horaires</h2>
+      <ScheduleTable />
     </StyledDiv>
-      );
+  );
 }
 
-      export default Vehicules;
+export default Vehicules;

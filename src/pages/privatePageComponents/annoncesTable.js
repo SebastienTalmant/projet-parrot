@@ -8,7 +8,7 @@ const StyledTable = styled.table`
   width: 100%;
   border-collapse: collapse;
   tr:nth-child(even) {
-    background-color: #d2d7df;
+    background-color: #8D99AE;
   }
 `;
 

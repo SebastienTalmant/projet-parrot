@@ -1,9 +1,13 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import styled from 'styled-components';
 
 const StyledTable = styled.table`
-  width: 100%;
-  border-bottom: 1px solid grey;
+  width: 50vw;
+  max-width: 512px;
+  @media (max-width: 767px) {
+    width: 100vw;
+  }
 `;
 
 const StyledRow = styled.tr`
@@ -25,7 +29,31 @@ const StyledTimeCellClosed = styled.td`
   justify-content: center;
 `;
 
-const ScheduleTable = ({ data }) => {
+const ScheduleTable = ({ onRefresh }) => {
+  const [data, setData] = useState([]);
+    
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+    const fetchData = async () => {
+      try {
+        const response = await axios.get('http://localhost:3000/hourly');
+        setData(response.data);
+      } catch (error) {
+        console.error("Erreur lors de la récupération des horaires.", error);
+      }
+    };
+    const refreshData = () => {
+      fetchData();
+    };
+
+    useEffect(() => {
+      if (onRefresh) {
+        onRefresh(refreshData);
+      }
+    }, [onRefresh]);
+
     data.sort((a, b) => a.day_id - b.day_id);
 
     return (

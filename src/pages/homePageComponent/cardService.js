@@ -37,7 +37,7 @@ const CardImage = styled.img`
 const CardTitle = styled.h3`
   margin: 10px 0;
   font-family: 'Montserrat', sans-serif;
-  color: 2B2D42;
+  color: #2B2D42;
 `;
 
 const CardDescription = styled.p`

@@ -6,7 +6,7 @@ const CarouselContainer = styled.div`
   position: relative;
   overflow: hidden;
   width: 100%;
-  height: 550px;
+  margin-bottom: 35px;
 `;
 
 const SlideWrapper = styled.div`

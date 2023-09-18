@@ -14,23 +14,14 @@ const ScheduleContainer = styled.div`
 `;
 
 const Schedule = () => {
-  const [schedules, setSchedules] = React.useState([]);
-
-  React.useEffect(() => {
-    fetchSchedules();
-  }, []);
-
-  const fetchSchedules = async () => {
-    const response = await axios.get('http://localhost:3000/hourly');
-    setSchedules(response.data);
-  };
+  let refreshTableData;
 
   const handleFormSubmit = async (day, scheduleData) => {
     console.log(day, scheduleData)
     try {
       const response = await axios.put(`http://localhost:3000/hourly/${day}`, scheduleData, { params: { _: new Date().getTime() } });
       if (response.status === 200) {
-        fetchSchedules();
+        if (refreshTableData) refreshTableData();
       }
     } catch (err) {
       console.error(err);
@@ -40,7 +31,7 @@ const Schedule = () => {
   return (
     <ScheduleContainer>
       <h3>Gestion des horaires</h3>
-      <ScheduleTable data={schedules} />
+      <ScheduleTable onRefresh={refresh => { refreshTableData = refresh; }} />
       <ScheduleForm onSubmit={handleFormSubmit} />
     </ScheduleContainer>
   );

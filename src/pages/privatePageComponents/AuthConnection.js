@@ -17,7 +17,7 @@ const MemberArea = styled.div`
 function Connection() {
   const [password, setPassword] = useState('');
   const [error, setError] = useState(null);
-  const { isLoggedIn, setIsLoggedIn, role, setRole, email, setEmail } = useContext(AuthContext);
+  const { isLoggedIn, setIsLoggedIn, setRole, email, setEmail } = useContext(AuthContext);
 
   const handleSubmit = async (e) => {
     e.preventDefault();

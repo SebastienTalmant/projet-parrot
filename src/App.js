@@ -5,9 +5,9 @@ import Home from './pages/Home';
 import Vehicules from './pages/Vehicules';
 import Contact from './pages/Contact';
 import Private from './pages/Private';
+import AnnonceDetail from './pages/vehiculesPageComponents/annoncesDetail';
 import logo from './logo.png';
 import { AuthProvider } from './pages/privatePageComponents/AuthContext';
-
 
 
 const Header = styled.header`
@@ -144,6 +144,7 @@ function App() {
           <Route path="/contact" element={<Contact />} />
           <Route path="/private" element={<Private />} />
           <Route path="/" element={<Home />} />
+          <Route path="/vehicules/:id" element={<AnnonceDetail />} />
         </Routes>
       </Router>
     </AuthProvider>

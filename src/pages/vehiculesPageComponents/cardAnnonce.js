@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import { useNavigate } from "react-router-dom";
 
 const CardContainer = styled.div`
     border: 1px solid #8D99AE;
@@ -7,8 +8,10 @@ const CardContainer = styled.div`
     padding: 16px;
     margin: 16px 0;
     width: 90%;
-    max-width: 250px;
     box-shadow: 5px 5px 10px #8D99AE;
+    :hover{
+        cursor: pointer;
+    }
 `;
 
 const ImageContainer = styled.div`
@@ -44,8 +47,13 @@ const Price = styled.span`
 `;
 
 const CardAnnonce = ({ annonce }) => {
+    const navigate = useNavigate();
+
+    const goToDetailPage = () => {
+        navigate(`/vehicules/${annonce.id}`);
+    };
     return (
-        <CardContainer>
+        <CardContainer onClick={goToDetailPage}>
             <ImageContainer style={{ backgroundImage: `url(${annonce.photo_url})` }} />
             <Title>{annonce.titre}</Title>
             <Description>{annonce.description}</Description>

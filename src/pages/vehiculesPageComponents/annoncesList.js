@@ -24,19 +24,58 @@ const AnnoncesGrid = styled.div`
 
 const FilterSliderContainer = styled.div`
     display: flex;
-    align-items: center;
+    flex-direction: column;
+    align-items: space-between;
     margin-bottom: 20px;
+    @media (max-width: 767px) { 
+        width: 90vw;
+    }
 `;
 
 const SliderLabel = styled.span`
     margin-right: 10px;
 `;
 
+const StyledSlider = styled(ReactSlider)`
+    width: 30%;
+    height: 20px;
+    background: #8D99AE;
+    border-radius: 50px;
+    outline: none;
+    @media (max-width: 767px) { 
+        width: 90%;
+    }
+
+    .thumb {
+        width: 20px;
+        height: 20px;
+        background: #2B2D42;
+        border-radius: 50%;
+        cursor: pointer;
+        outline: none;
+    }
+
+    .track {
+        top: 12px;
+        background: #2B2D42;
+    }
+
+    .active {
+        background: #2B2D42;
+    }
+`;
+
+
 const AnnoncesList = () => {
     const [annonces, setAnnonces] = useState([]);
-    const [filters, setFilters] = useState({
-        prix: [0, 0], 
-        annee: [0, 0], 
+    const [globalFilters, setGlobalFilters] = useState({
+        prix: [0, 0],
+        annee: [0, 0],
+        kilometrage: [0, 0]
+    });
+    const [userFilters, setUserFilters] = useState({
+        prix: [0, 0],
+        annee: [0, 0],
         kilometrage: [0, 0]
     });
 
@@ -56,7 +95,12 @@ const AnnoncesList = () => {
             try {
                 const response = await axios.get('http://localhost:3000/annonces/filters');
                 const data = response.data;
-                setFilters({
+                setGlobalFilters({
+                    prix: [data.minPrix, data.maxPrix],
+                    annee: [data.minAnnee, data.maxAnnee],
+                    kilometrage: [data.minKilometrage, data.maxKilometrage]
+                });
+                setUserFilters({
                     prix: [data.minPrix, data.maxPrix],
                     annee: [data.minAnnee, data.maxAnnee],
                     kilometrage: [data.minKilometrage, data.maxKilometrage]
@@ -67,52 +111,60 @@ const AnnoncesList = () => {
         };
 
         fetchFilters();
-        
     }, []);
 
     const handleSliderChange = (field, values) => {
-        setFilters(prev => ({ ...prev, [field]: values }));
+        setUserFilters(prev => ({ ...prev, [field]: values }));
     };
+
+    const annoncesFiltrees = annonces.filter(annonce =>
+        annonce.prix >= userFilters.prix[0] &&
+        annonce.prix <= userFilters.prix[1] &&
+        annonce.annee >= userFilters.annee[0] &&
+        annonce.annee <= userFilters.annee[1] &&
+        annonce.kilometrage >= userFilters.kilometrage[0] &&
+        annonce.kilometrage <= userFilters.kilometrage[1]
+    );
 
     return (
         <div>
-           <FilterSliderContainer>
-              <SliderLabel>Prix: {filters.prix[0]} - {filters.prix[1]}</SliderLabel>
-              <ReactSlider
-                 value={filters.prix}
-                 onChange={values => handleSliderChange('prix', values)}
-                 min={filters.prix[0]}
-                 max={filters.prix[1]}
-              />
-           </FilterSliderContainer>
-  
-           <FilterSliderContainer>
-              <SliderLabel>Année: {filters.annee[0]} - {filters.annee[1]}</SliderLabel>
-              <ReactSlider
-                 value={filters.annee}
-                 onChange={values => handleSliderChange('annee', values)}
-                 min={filters.annee[0]}
-                 max={filters.annee[1]}
-              />
-           </FilterSliderContainer>
-  
-           <FilterSliderContainer>
-              <SliderLabel>Kilométrage: {filters.kilometrage[0]} - {filters.kilometrage[1]}</SliderLabel>
-              <ReactSlider
-                 value={filters.kilometrage}
-                 onChange={values => handleSliderChange('kilometrage', values)}
-                 min={filters.kilometrage[0]}
-                 max={filters.kilometrage[1]}
-              />
-           </FilterSliderContainer>
-  
-           <AnnoncesGrid>
-              {annonces.map(annonce => (
-                 <CardAnnonce key={annonce.id} annonce={annonce} />
-              ))}
-           </AnnoncesGrid>
+            <FilterSliderContainer>
+                <SliderLabel>Prix: {userFilters.prix[0]} - {userFilters.prix[1]}</SliderLabel>
+                <StyledSlider
+                    value={userFilters.prix}
+                    onChange={values => handleSliderChange('prix', values)}
+                    min={globalFilters.prix[0]}
+                    max={globalFilters.prix[1]}
+                />
+            </FilterSliderContainer>
+
+            <FilterSliderContainer>
+                <SliderLabel>Année: {userFilters.annee[0]} - {userFilters.annee[1]}</SliderLabel>
+                <StyledSlider
+                    value={userFilters.annee}
+                    onChange={values => handleSliderChange('annee', values)}
+                    min={globalFilters.annee[0]}
+                    max={globalFilters.annee[1]}
+                />
+            </FilterSliderContainer>
+
+            <FilterSliderContainer>
+                <SliderLabel>Kilométrage: {userFilters.kilometrage[0]} - {userFilters.kilometrage[1]}</SliderLabel>
+                <StyledSlider
+                    value={userFilters.kilometrage}
+                    onChange={values => handleSliderChange('kilometrage', values)}
+                    min={globalFilters.kilometrage[0]}
+                    max={globalFilters.kilometrage[1]}
+                />
+            </FilterSliderContainer>
+
+            <AnnoncesGrid>
+                {annoncesFiltrees.map(annonce => (
+                    <CardAnnonce key={annonce.id} annonce={annonce} />
+                ))}
+            </AnnoncesGrid>
         </div>
-     );
-  };
+    );
+};
 
 export default AnnoncesList;

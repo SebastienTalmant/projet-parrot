@@ -40,21 +40,6 @@ const DashboardContainer = styled.div`
 
 const TableContainer = styled.div`
   width: 100%;
-  
-  @media (min-width: 768px) {
-    width: 50%;
-  }
-`;
-
-const FormContainer = styled.div`
-  width: 100%;
-  display: ${({ showForm }) => showForm ? 'block' : 'none'};
-  
-  @media (min-width: 768px) {
-    width: 50%;
-    display: block;
-    max-width: 512px;
-  }
 `;
 
 const AnnoncesDashboard = () => {
