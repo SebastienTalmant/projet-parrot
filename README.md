@@ -1,70 +1,68 @@
-# Getting Started with Create React App
+Projet Parrot
+Ce projet est une application web développée en React pour la partie frontend et en Node.js avec Express pour la partie backend. Il utilise également une base de données MySQL.
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Prérequis
+Node.js
+MySQL
+XAMPP (ou tout autre serveur local de votre choix pour MySQL)
 
-## Available Scripts
 
-In the project directory, you can run:
+Configuration
 
-### `npm start`
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+Base de données:
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+Lancez votre serveur MySQL (par exemple avec XAMPP).
+Créez une nouvelle base de données appelée parrot.
+Exécutez le script SQL pour créer les tables nécessaires (ce script doit être fourni séparément).
+Variables d'environnement:
 
-### `npm test`
+Assurez-vous d'avoir les clés AWS configurées comme variables d'environnement (AWS_ACCESS_KEY, AWS_SECRET_ACCESS_KEY, et AWS_REGION).
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
 
-### `npm run build`
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+Installation des dépendances:
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+Backend:
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+cd path_to_your_backend_folder
+npm install @aws-sdk/client-s3 aws-sdk bcrypt cors dotenv express express-session multer mysql
 
-### `npm run eject`
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+Frontend:
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+cd path_to_your_frontend_folder
+npm install @testing-library/jest-dom @testing-library/react @testing-library/user-event aws-sdk axios babel-plugin-macros moment mysql react react-dom react-icons react-js-pagination react-multi-carousel react-responsive-carousel react-router-dom react-scripts react-slider react-transition-group styled-components uuid web-vitals
+Création d'un administrateur:
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+Dans le dossier du backend, exécutez le script de création d'admin pour créer un utilisateur admin dans la base de données :
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+node createAdmin.js
 
-## Learn More
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+Exécution en local
+Backend:
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+Naviguez vers le dossier du backend et lancez le serveur avec :
 
-### Code Splitting
+node server.js
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+Le serveur démarrera et écoutera sur le port 3000.
 
-### Analyzing the Bundle Size
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+Frontend:
 
-### Making a Progressive Web App
+Naviguez vers le dossier du frontend et lancez l'application React avec :
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+npm start
+L'application démarrera et s'ouvrira dans votre navigateur par défaut sur http://localhost:3001.
 
-### Advanced Configuration
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+Utilisation:
 
-### Deployment
+Vous pouvez maintenant naviguer dans l'application, vous connecter avec le compte admin créé précédemment (v.parrot@test.fr / 123), ou créer et gérer d'autres utilisateurs et fonctionnalités.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
 
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+Notes
+Assurez-vous que les ports 3000 et 3001 sont disponibles avant de démarrer les serveurs.
+Si vous rencontrez des problèmes de CORS lors de l'exécution en local, assurez-vous que la configuration CORS du backend autorise le frontend.
