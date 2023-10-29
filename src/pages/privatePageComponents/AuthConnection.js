@@ -3,6 +3,7 @@ import axios from 'axios';
 import { AuthContext } from './AuthContext';
 import Button from '../../button';
 import styled from 'styled-components';
+import API_BASE_URL from '../../apiConfig';
 
 const MemberArea = styled.div`
   display: flex;
@@ -23,7 +24,7 @@ function Connection() {
     e.preventDefault();
   
     try {
-      const response = await axios.post('http://localhost:3000/login', { email, password });
+      const response = await axios.post(`${API_BASE_URL}login`, { email, password });
       if (response && response.data) {
         setIsLoggedIn(true);
         setRole(response.data.role);

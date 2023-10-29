@@ -6,6 +6,7 @@ import TabComponent from './tabComponent';
 import axios from 'axios';
 import { useParams } from "react-router-dom";
 import styled from 'styled-components';
+import API_BASE_URL from '../../apiConfig';
 
 const ModalOverlay = styled.div`
   position: fixed;
@@ -67,7 +68,7 @@ const AnnonceDetail = () => {
     useEffect(() => {
         const fetchAnnonce = async () => {
             try {
-                const response = await axios.get(`http://localhost:3000/annonces/${id}`);
+                const response = await axios.get(`${API_BASE_URL}annonces/${id}`);
                 setAnnonce(response.data);
             } catch (error) {
                 console.error("Error fetching annonce details:", error);

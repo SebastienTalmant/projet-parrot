@@ -3,6 +3,7 @@ import axios from 'axios';
 import ScheduleForm from './scheduleForm';
 import ScheduleTable from '../../scheduleTable';
 import styled from 'styled-components';
+import API_BASE_URL from '../../apiConfig';
 
 const ScheduleContainer = styled.div`
   display: flex;
@@ -19,7 +20,7 @@ const Schedule = () => {
   const handleFormSubmit = async (day, scheduleData) => {
     console.log(day, scheduleData)
     try {
-      const response = await axios.put(`http://localhost:3000/hourly/${day}`, scheduleData, { params: { _: new Date().getTime() } });
+      const response = await axios.put(`${API_BASE_URL}hourly/${day}`, scheduleData, { params: { _: new Date().getTime() } });
       if (response.status === 200) {
         if (refreshTableData) refreshTableData();
       }

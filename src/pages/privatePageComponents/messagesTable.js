@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import axios from 'axios';
 import Button from '../../button';
 import MessageModal from './messageModal';
+import API_BASE_URL from '../../apiConfig';
 
 const DashboardContainer = styled.div`
   display: flex;
@@ -40,7 +41,7 @@ const MessagesTable = ({ data, onEdit, onDelete, onAdd }) => {
     };
 
     const fetchMessages = async () => {
-        const response = await axios.get('http://localhost:3000/contact');
+        const response = await axios.get(`${API_BASE_URL}contact`);
         const sortedData = response.data.sort((a, b) => b.id - a.id);
         setMessages(response.data);
     };
@@ -58,7 +59,7 @@ const MessagesTable = ({ data, onEdit, onDelete, onAdd }) => {
     };
 
     const handleTreatedMessage = async (messageId) => {
-        await axios.put(`http://localhost:3000/contact/${messageId}`, { statut: 'traité' });
+        await axios.put(`${API_BASE_URL}contact/${messageId}`, { statut: 'traité' });
         const updatedMessages = messages.map(message => message.id === messageId ? { ...message, statut: 'traité' } : message);
         setMessages(updatedMessages);
         fetchMessages();
@@ -67,7 +68,7 @@ const MessagesTable = ({ data, onEdit, onDelete, onAdd }) => {
 
     const handleDeleteMessage = async (messageId) => {
         if (window.confirm("Voulez-vous supprimer ce message ?")) {
-        await axios.delete(`http://localhost:3000/contact/${messageId}`);
+        await axios.delete(`${API_BASE_URL}contact/${messageId}`);
         const updatedMessages = messages.filter(message => message.id !== messageId);
         setMessages(updatedMessages);
         fetchMessages();

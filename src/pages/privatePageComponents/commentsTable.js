@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import axios from 'axios';
 import Button from '../../button';
 import CommentModal from './commentModal';
+import API_BASE_URL from '../../apiConfig';
 
 const DashboardContainer = styled.div`
   display: flex;
@@ -41,7 +42,7 @@ const CommentsTable = ({ data, onEdit, onDelete, onAdd }) => {
     };
     
     const fetchComments = async () => {
-        const response = await axios.get('http://localhost:3000/comments');
+        const response = await axios.get(`${API_BASE_URL}comments`);
         const sortedData = response.data.sort((a, b) => new Date(b.reception_date) - new Date(a.reception_date));
         setComments(sortedData);
     };
@@ -59,7 +60,7 @@ const CommentsTable = ({ data, onEdit, onDelete, onAdd }) => {
     };
 
     const handleTreatedComment = async (commentId, answer) => {
-        await axios.put(`http://localhost:3000/comments/${commentId}`, { approved: true, answer: answer });
+        await axios.put(`${API_BASE_URL}comments/${commentId}`, { approved: true, answer: answer });
         const updatedComments = comments.map(comment => comment.id === commentId ? { ...comment, approved: true, answer: answer } : comment);
         setComments(updatedComments);
         fetchComments();
@@ -68,7 +69,7 @@ const CommentsTable = ({ data, onEdit, onDelete, onAdd }) => {
 
     const handleDeleteComment = async (commentId) => {
         if (window.confirm("Voulez-vous supprimer ce commentaire ?")) {
-            await axios.delete(`http://localhost:3000/comments/${commentId}`);
+            await axios.delete(`${API_BASE_URL}comments/${commentId}`);
             const updatedComments = comments.filter(comment => comment.id !== commentId);
             setComments(updatedComments);
             fetchComments();

@@ -3,6 +3,7 @@ import CardServiceForm from './cardServiceForm';
 import CardServiceTable from './cardServiceTable';
 import axios from 'axios';
 import styled from 'styled-components';
+import API_BASE_URL from '../../apiConfig';
 
 const DashboardContainer = styled.div`
   display: flex;
@@ -43,7 +44,7 @@ const CardServiceDashboard = () => {
   }, []);
 
   const fetchCards = async () => {
-    const response = await axios.get('http://localhost:3000/cardservice');
+    const response = await axios.get(`${API_BASE_URL}cardservice`);
     const data = Array.isArray(response.data) ? response.data : [response.data];
     setCards(data);
   };
@@ -60,7 +61,7 @@ const CardServiceDashboard = () => {
 
   const handleDelete = async (id) => {
     if (window.confirm("Voulez-vous supprimer ce service ?")) {
-      const response = await axios.delete(`http://localhost:3000/cardservice/${id}`);
+      const response = await axios.delete(`${API_BASE_URL}cardservice/${id}`);
       if (response.status === 200) {
         fetchCards();
         alert('Enregistrement effectué')
@@ -70,9 +71,9 @@ const CardServiceDashboard = () => {
 
   const handleFormSubmit = async (formData) => {
     if (currentId === 0) {
-      await axios.post('http://localhost:3000/cardservice', formData);
+      await axios.post(`${API_BASE_URL}cardservice`, formData);
     } else {
-      await axios.put(`http://localhost:3000/cardservice/${currentId}`, formData);
+      await axios.put(`${API_BASE_URL}cardservice/${currentId}`, formData);
     }
     fetchCards();
     setCurrentId(0);

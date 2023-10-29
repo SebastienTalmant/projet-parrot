@@ -3,6 +3,7 @@ import axios from 'axios';
 import CardAnnonce from './cardAnnonce';
 import ReactSlider from 'react-slider';
 import styled from 'styled-components';
+import API_BASE_URL from '../../apiConfig';
 
 const AnnoncesGrid = styled.div`
     display: grid;
@@ -82,7 +83,7 @@ const AnnoncesList = () => {
     useEffect(() => {
         const fetchAnnonces = async () => {
             try {
-                const response = await axios.get('http://localhost:3000/annonces/summaries');
+                const response = await axios.get(`${API_BASE_URL}annonces/summaries`);
                 setAnnonces(response.data);
             } catch (error) {
                 console.error("Error fetching annonces:", error);
@@ -93,7 +94,7 @@ const AnnoncesList = () => {
 
         const fetchFilters = async () => {
             try {
-                const response = await axios.get('http://localhost:3000/annonces/filters');
+                const response = await axios.get(`${API_BASE_URL}annonces/filters`);
                 const data = response.data;
                 setGlobalFilters({
                     prix: [data.minPrix, data.maxPrix],

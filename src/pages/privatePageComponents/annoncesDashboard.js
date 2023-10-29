@@ -3,6 +3,7 @@ import AnnoncesForm from './annoncesForm';
 import AnnoncesTable from './annoncesTable';
 import axios from 'axios';
 import styled from 'styled-components';
+import API_BASE_URL from '../../apiConfig';
 
 
 const ModalOverlay = styled.div`
@@ -52,7 +53,7 @@ const AnnoncesDashboard = () => {
   }, [showForm]);
 
   const fetchAnnonces = async () => {
-    const response = await axios.get('http://localhost:3000/annoncestable');
+    const response = await axios.get(`${API_BASE_URL}annoncestable`);
     console.log("Data from API:", response.data);
     const data = Array.isArray(response.data) ? response.data : [response.data];
     setAnnonces(data);
@@ -66,7 +67,7 @@ const AnnoncesDashboard = () => {
 
   const handleDelete = async (id) => {
     if (window.confirm("Voulez-vous supprimer cette annonce ?")) {
-      const response = await axios.delete(`http://localhost:3000/annonces/${id}`);
+      const response = await axios.delete(`${API_BASE_URL}annonces/${id}`);
       if (response.status === 200) {
         fetchAnnonces();
         alert('Enregistrement effectué')
@@ -75,7 +76,7 @@ const AnnoncesDashboard = () => {
   };
 
   const handleFormSubmit = async (formData) => {
-    await axios.post('http://localhost:3000/annonces', formData);
+    await axios.post(`${API_BASE_URL}annonces`, formData);
     fetchAnnonces();
     setCurrentId(0);
     setShowForm(false);

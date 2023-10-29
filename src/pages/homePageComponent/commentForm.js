@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import Button from '../../button';
 import axios from 'axios';
+import API_BASE_URL from '../../apiConfig';
 
 const Form = styled.form`
   display: flex;
@@ -84,7 +85,7 @@ const CommentForm = () => {
       e.preventDefault();
   
       try {
-        const response = await axios.post('http://localhost:3000/comments', formData);
+        const response = await axios.post(`${API_BASE_URL}comments`, formData);
   
         if (response.status === 200) {
           setFormData({

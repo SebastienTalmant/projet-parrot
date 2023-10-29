@@ -5,6 +5,7 @@ import styled from 'styled-components';
 import Button from '../../button';
 import { v4 as uuidv4 } from 'uuid';
 import axios from 'axios';
+import API_BASE_URL from '../../apiConfig';
 
 const StyledSelect = styled.select`
   padding: 10px;
@@ -104,7 +105,7 @@ const AnnoncesForm = ({ onClose}) => {
     const { email } = useContext(AuthContext);
 
     useEffect(() => {
-        axios.get('http://localhost:3000/options_equipements')
+        axios.get(`${API_BASE_URL}options_equipements`)
             .then(res => {
                 const optionsMap = {};
                 console.log ('optionsMap :', optionsMap)
@@ -131,7 +132,7 @@ const AnnoncesForm = ({ onClose}) => {
                 setCurrentOption('');
             }
         } else {
-            axios.post('http://localhost:3000/options_equipements', { option: currentOption })
+            axios.post(`${API_BASE_URL}options_equipements`, { option: currentOption })
                 .then(res => {
                     const newOption = { nom: currentOption, id: res.data.id };
                     setAllOptions({ ...allOptions, [currentOption]: res.data.id });
@@ -209,7 +210,7 @@ const AnnoncesForm = ({ onClose}) => {
                 user_email: email
             };
 
-            const annonceResponse = await axios.post('http://localhost:3000/annonces', formData);
+            const annonceResponse = await axios.post(`${API_BASE_URL}annonces`, formData);
             annonceID = annonceResponse.data.annonce_id;
             let annonce_id = annonceID
             if (!annonceID) {
@@ -217,7 +218,7 @@ const AnnoncesForm = ({ onClose}) => {
             }
 
             for (const photo_url of imageUrls) {
-                await axios.post('http://localhost:3000/photos', {
+                await axios.post(`${API_BASE_URL}photos`, {
                     annonce_id,
                     photo_url
                 });
@@ -227,7 +228,7 @@ const AnnoncesForm = ({ onClose}) => {
             for (const option of selectedOptions) {
                 const optionId = allOptions[option.nom];
                 if (optionId) {                    
-                    await axios.post('http://localhost:3000/annonces_options', {
+                    await axios.post(`${API_BASE_URL}annonces_options`, {
                         annonce_id,
                         option_name: option.nom
                     });
@@ -252,7 +253,7 @@ const AnnoncesForm = ({ onClose}) => {
             }
 
             if (annonceID) {
-                axios.post('http://localhost:3000/cleanup', { annonce_id: annonceID });
+                axios.post(`${API_BASE_URL}cleanup`, { annonce_id: annonceID });
             }
 
             if (error.message === "Failed to upload images to S3") {

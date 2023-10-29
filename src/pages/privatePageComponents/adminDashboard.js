@@ -6,6 +6,7 @@ import Schedule from './schedule';
 import axios from 'axios';
 import Connection from './AuthConnection';
 import CardServiceDashboard from './cardServiceDashboard';
+import API_BASE_URL from '../../apiConfig';
 
 const DashboardContainer = styled.div`
   display: flex;
@@ -37,7 +38,7 @@ const AdminDashboard = () => {
   }, []);
 
   const fetchUsers = async () => {
-    const response = await axios.get('http://localhost:3000/user');
+    const response = await axios.get(`${API_BASE_URL}user`);
     const data = Array.isArray(response.data) ? response.data : [response.data];
     setUsers(data);
   };
@@ -54,7 +55,7 @@ const AdminDashboard = () => {
 
   const handleDelete = async (id) => {
     if (window.confirm("Voulez-vous supprimer ce profil ?")) {
-      const response = await axios.delete(`http://localhost:3000/users/${id}`);
+      const response = await axios.delete(`${API_BASE_URL}users/${id}`);
       if (response.status === 200) {
         fetchUsers();
         alert('Enregistrement effectué')
@@ -64,7 +65,7 @@ const AdminDashboard = () => {
 
   const handleFormSubmit = async (formData) => {
     let response;
-      response = await axios.post('http://localhost:3000/users', formData);
+      response = await axios.post(`${API_BASE_URL}users`, formData);
     if (response && response.status === 200) {
       setFormAction(null);
       fetchUsers();

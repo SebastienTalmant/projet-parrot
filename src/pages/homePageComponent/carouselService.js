@@ -2,14 +2,14 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import CardService from './cardService';
 import Carousel from '../../carousel';
-
+import API_BASE_URL from '../../apiConfig';
 
 const CarouselService = () => {
   const [cards, setCards] = useState([]);
 
   useEffect(() => {
     const fetchCards = async () => {
-      const response = await axios.get('http://localhost:3000/cardservice');
+      const response = await axios.get(`${API_BASE_URL}cardservice`);
       setCards(response.data);
     };
 
